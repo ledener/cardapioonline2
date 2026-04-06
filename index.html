@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cardápio — Coração da Vila</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & Base ─────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal:   #00BDCD;
+      --navy:   #003966;
+      --yellow: #F6B40F;
+      --orange: #DB5610;
+      --deep:   #006385;
+      --bg:     #f5f9fa;
+      --white:  #ffffff;
+      --text:   #1a2e3b;
+      --muted:  #5a7080;
+      --radius: 16px;
+      --shadow: 0 4px 20px rgba(0,57,102,.12);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Hero ─────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(160deg, var(--navy) 0%, var(--deep) 60%, var(--teal) 100%);
+      padding: 40px 20px 50px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .hero-logo {
+      width: 160px;
+      height: auto;
+      filter: drop-shadow(0 4px 16px rgba(0,0,0,.4));
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-tagline {
+      color: var(--white);
+      font-size: 1rem;
+      font-weight: 600;
+      margin-top: 12px;
+      opacity: .85;
+      letter-spacing: .5px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--yellow);
+      color: var(--navy);
+      font-weight: 800;
+      font-size: .8rem;
+      padding: 6px 14px;
+      border-radius: 50px;
+      margin-top: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Sticky Nav ───────────────────────────────── */
+    .nav-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--white);
+      box-shadow: 0 2px 12px rgba(0,57,102,.1);
+    }
+
+    .nav-tabs {
+      display: flex;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+
+    .nav-tab {
+      flex: 1;
+      min-width: 100px;
+      padding: 14px 10px;
+      border: none;
+      background: none;
+      font-family: inherit;
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--muted);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+
+    .nav-tab.active {
+      color: var(--navy);
+      border-bottom-color: var(--yellow);
+    }
+
+    .nav-tab:hover:not(.active) {
+      color: var(--deep);
+      border-bottom-color: var(--teal);
+    }
+
+    /* ── Sections ─────────────────────────────────── */
+    .section {
+      display: none;
+      padding: 24px 16px 32px;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .section.active { display: block; }
+
+    .section-title {
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .section-subtitle {
+      font-size: .85rem;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    /* ── Cards ────────────────────────────────────── */
+    .cards { display: flex; flex-direction: column; gap: 14px; }
+
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .card:active { transform: scale(.98); }
+
+    .card-img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-body {
+      padding: 16px 16px 14px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .card-number {
+      background: var(--teal);
+      color: var(--white);
+      font-weight: 800;
+      font-size: .7rem;
+      padding: 2px 8px;
+      border-radius: 20px;
+      white-space: nowrap;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .card-name {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--navy);
+      line-height: 1.3;
+      flex: 1;
+    }
+
+    .card-desc {
+      font-size: .8rem;
+      color: var(--muted);
+      margin-top: 5px;
+      line-height: 1.4;
+    }
+
+    /* ── Buttons ──────────────────────────────────── */
+    .card-actions {
+      margin-top: 14px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-wpp {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 12px;
+      border: none;
+      border-radius: 10px;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: .82rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: filter .15s, transform .1s;
+      white-space: nowrap;
+    }
+    .btn-wpp:active { transform: scale(.96); }
+
+    .btn-wpp.primary {
+      background: #25D366;
+      color: #fff;
+    }
+    .btn-wpp.primary:hover { filter: brightness(1.08); }
+
+    .btn-wpp.meia {
+      background: var(--teal);
+      color: var(--white);
+    }
+    .btn-wpp.meia:hover { filter: brightness(1.08); }
+
+    .btn-wpp.inteira {
+      background: var(--navy);
+      color: var(--white);
+    }
+    .btn-wpp.inteira:hover { filter: brightness(1.2); }
+
+    .size-label {
+      font-size: .65rem;
+      opacity: .8;
+      display: block;
+      font-weight: 600;
+    }
+    .size-name {
+      font-size: .85rem;
+    }
+
+    /* WhatsApp icon SVG inline */
+    .ico-wpp {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+      flex-shrink: 0;
+    }
+
+    /* ── Divider accent ───────────────────────────── */
+    .accent-bar {
+      height: 4px;
+      background: linear-gradient(90deg, var(--yellow), var(--orange));
+      border-radius: 2px;
+      margin-bottom: 20px;
+      width: 48px;
+    }
+
+    /* ── Footer ───────────────────────────────────── */
+    footer {
+      background: var(--navy);
+      color: rgba(255,255,255,.75);
+      text-align: center;
+      padding: 28px 20px;
+      font-size: .82rem;
+      line-height: 1.8;
+    }
+
+    footer strong { color: var(--yellow); }
+
+    .footer-wpp-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #25D366;
+      color: #fff;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: .9rem;
+      padding: 12px 24px;
+      border-radius: 50px;
+      text-decoration: none;
+      margin: 14px 0 18px;
+      transition: filter .2s;
+    }
+    .footer-wpp-btn:hover { filter: brightness(1.1); }
+
+    /* ── Responsive tweaks ────────────────────────── */
+    @media (min-width: 480px) {
+      .cards {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+    }
+    @media (min-width: 640px) {
+      .hero-logo { width: 190px; }
+      .section { padding: 32px 24px 48px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HERO ──────────────────────────────────────── -->
+<header class="hero">
+  <img src="logo.png" alt="Coração da Vila" class="hero-logo" />
+  <p class="hero-tagline">Sabor, praia e aquela sensação de casa 🌊</p>
+  <span class="hero-badge">
+    <svg class="ico-wpp" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    Peça pelo WhatsApp
+  </span>
+</header>
+
+<!-- ── NAV TABS ───────────────────────────────────── -->
+<nav class="nav-wrap">
+  <div class="nav-tabs" role="tablist">
+    <button class="nav-tab active" role="tab" onclick="switchTab('petiscos', this)">🍟 Petiscos</button>
+    <button class="nav-tab" role="tab" onclick="switchTab('comida', this)">🍽️ Comida Caseira</button>
+    <button class="nav-tab" role="tab" onclick="switchTab('bebidas', this)">🍺 Bebidas</button>
+  </div>
+</nav>
+
+<!-- ── PETISCOS ───────────────────────────────────── -->
+<section id="petiscos" class="section active">
+  <h2 class="section-title">Petiscos</h2>
+  <p class="section-subtitle">Escolha o tamanho: <strong>Meia</strong> ou <strong>Inteira</strong></p>
+  <div class="accent-bar"></div>
+  <div class="cards" id="cards-petiscos"></div>
+</section>
+
+<!-- ── COMIDA CASEIRA ─────────────────────────────── -->
+<section id="comida" class="section">
+  <h2 class="section-title">Comida Caseira</h2>
+  <p class="section-subtitle">Pratos completos feitos com carinho</p>
+  <div class="accent-bar"></div>
+  <div class="cards" id="cards-comida"></div>
+</section>
+
+<!-- ── BEBIDAS ────────────────────────────────────── -->
+<section id="bebidas" class="section">
+  <h2 class="section-title">Bebidas</h2>
+  <p class="section-subtitle">Para acompanhar seu pedido</p>
+  <div class="accent-bar"></div>
+  <div class="cards" id="cards-bebidas"></div>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────────── -->
+<footer>
+  <img src="logo.png" alt="Coração da Vila" style="width:80px;opacity:.8;margin-bottom:12px;" />
+  <br />
+  <strong>Coração da Vila</strong><br />
+  Fale com a gente pelo WhatsApp e faça seu pedido!
+  <br />
+  <a class="footer-wpp-btn" href="https://wa.me/5522981836873" target="_blank" rel="noopener">
+    <svg class="ico-wpp" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    (22) 98183-6873
+  </a>
+  <br />
+  <span style="font-size:.75rem;opacity:.5;">© 2025 Coração da Vila · Todos os direitos reservados</span>
+</footer>
+
+<script>
+  // ── MOCK DATA ──────────────────────────────────────
+  const WPP = '5522981836873';
+
+  const petiscos = [
+    { num: 1,  name: 'Trio Coração da Vila',   desc: 'Camarão ao alho e óleo, batata frita, gurjão, molho especial', img: 'petisco trio coração da vila.png' },
+    { num: 2,  name: 'Caixa de Petiscos',       desc: 'Batata frita, pastéis, salgadinhos, gurjão, molho especial', img: 'petisco caixa de petiscos.png' },
+    { num: 3,  name: 'Churrasco Misto c/ Fritas', desc: 'Iscas de carne, frango e linguiça acebolada, batata frita', img: 'petisco churrasco misto.png' },
+    { num: 4,  name: 'Gurjão de Peixe c/ Fritas', desc: 'Gurjão de peixe, batata frita e molho especial', img: 'petisco gurjão de peixe.png' },
+    { num: 5,  name: 'Gurjão de Frango c/ Fritas', desc: 'Gurjão de frango, batata frita e molho especial', img: 'petisco gurjão de frango.png' },
+    { num: 6,  name: 'Batata Turbinada',        desc: 'Bacon, parmesão ralado, cheddar e requeijão', img: 'petisco batata maluca.png' },
+    { num: 7,  name: 'Linguiça Acebolada',      desc: 'Linguiça frita com cebola', img: 'petisco calabresa acebolada.png' },
+    { num: 8,  name: 'Porção de Pastéis',       desc: '12 unidades: 4 Carne, 4 Queijo e 4 Camarão', img: 'petisco pastéis.png' },
+    { num: 9,  name: 'Batata Frita',            desc: 'Batata frita e sal', img: 'petisco batata frita.png' },
+    { num: 10, name: 'Tábua de Frios',          desc: 'Salaminho, ovo de codorna, azeitonas, amendoim, queijo e presunto', img: 'petisco tábua de frios.png' },
+  ];
+
+  const comida = [
+    { num: 11, name: 'Filé Acebolado c/ Fritas', desc: 'Arroz, feijão, farofa, filé acebolado, salada ou fritas', img: 'comida contra filé com fritas.png' },
+    { num: 12, name: 'Gurjão de Peixe',          desc: 'Arroz, feijão, farofa, gurjão de peixe, salada ou fritas', img: 'comida gurjão de peixe.png' },
+    { num: 13, name: 'Churrasco Misto',          desc: 'Arroz, feijão, farofa, churrasco misto, salada ou fritas', img: 'comida churrasco v3.png' },
+    { num: 14, name: 'Gurjão de Frango',         desc: 'Arroz, feijão, farofa, gurjão de frango, salada ou fritas', img: 'comida gurjao frango.png' },
+    { num: 15, name: 'Linguiça Mineira',         desc: 'Arroz, feijão, farofa, linguiça mineira acebolada, salada ou fritas', img: 'comida linguiça.png' },
+    { num: 16, name: 'Frango Grelhado',          desc: 'Arroz, feijão, farofa, frango grelhado, salada ou fritas', img: 'comida frango grelhado.png' },
+  ];
+
+  const bebidas = [
+    { name: 'Caipirinha 500ml',       desc: 'Refrescante, do jeito que você gosta', img: 'bebida caipirinha 2026.png' },
+    { name: 'Suco Natural 500ml',     desc: 'Frutas frescas da estação', img: 'bebida sucos.png' },
+    { name: 'Heineken 600ml',         desc: 'Long neck gelada', img: 'bebida heineken latao.webp' },
+    { name: 'Coca-Cola 2L',           desc: 'Para compartilhar', img: 'bebida coca 2lt.png' },
+    { name: 'Amstel 600ml',           desc: 'Long neck gelada', img: 'bebida amstel 600.webp' },
+    { name: 'Heineken Latão',         desc: 'Latão bem gelado', img: 'bebida heineken latao.webp' },
+    { name: 'Brahma / Amstel Latão',  desc: 'Latão bem gelado', img: 'bebida amstel e brahma.png' },
+    { name: 'Refrigerante Lata',      desc: 'Diversas opções', img: 'bebida refrigerantes lata.png' },
+    { name: 'Água c/ Gás',            desc: '500ml', img: 'bebidas agua c gás.jpg' },
+    { name: 'Água s/ Gás',            desc: '500ml', img: 'bebida água sem gás.jpg' },
+    { name: 'Guaraná Natural',        desc: 'Refrescante e natural', img: 'bebida guaravita png.png' },
+  ];
+
+  // ── ICON HTML ─────────────────────────────────────
+  const wppIcon = `<svg class="ico-wpp" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>`;
+
+  // ── LINK BUILDER ──────────────────────────────────
+  function wppLink(text) {
+    return `https://wa.me/${WPP}?text=${encodeURIComponent(text)}`;
+  }
+
+  // ── RENDER PETISCOS ───────────────────────────────
+  function renderPetiscos() {
+    const el = document.getElementById('cards-petiscos');
+    el.innerHTML = petiscos.map(item => `
+      <div class="card">
+        <img src="${item.img}" alt="${item.name}" class="card-img" />
+        <div class="card-body">
+          <div class="card-header">
+            <span class="card-number">#${item.num}</span>
+            <span class="card-name">${item.name}</span>
+          </div>
+          <p class="card-desc">${item.desc}</p>
+          <div class="card-actions">
+            <a class="btn-wpp primary"
+               href="${wppLink(`Olá! Quero pedir:\n*${item.num}. ${item.name}*`)}"
+               target="_blank" rel="noopener">
+              ${wppIcon} Pedir agora
+            </a>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ── RENDER COMIDA ─────────────────────────────────
+  function renderComida() {
+    const el = document.getElementById('cards-comida');
+    el.innerHTML = comida.map(item => `
+      <div class="card">
+        <img src="${item.img}" alt="${item.name}" class="card-img" />
+        <div class="card-body">
+          <div class="card-header">
+            <span class="card-number">#${item.num}</span>
+            <span class="card-name">${item.name}</span>
+          </div>
+          <p class="card-desc">${item.desc}</p>
+          <div class="card-actions">
+            <a class="btn-wpp primary"
+               href="${wppLink(`Olá! Quero pedir:\n*${item.num}. ${item.name}*`)}"
+               target="_blank" rel="noopener">
+              ${wppIcon} Pedir agora
+            </a>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ── RENDER BEBIDAS ────────────────────────────────
+  function renderBebidas() {
+    const el = document.getElementById('cards-bebidas');
+    el.innerHTML = bebidas.map(item => `
+      <div class="card">
+        <img src="${item.img}" alt="${item.name}" class="card-img" />
+        <div class="card-body">
+          <div class="card-header">
+            <span class="card-name">${item.name}</span>
+          </div>
+          <p class="card-desc">${item.desc}</p>
+          <div class="card-actions">
+            <a class="btn-wpp primary"
+               href="${wppLink(`Olá! Quero pedir:\n*${item.name}*`)}"
+               target="_blank" rel="noopener">
+              ${wppIcon} Pedir agora
+            </a>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ── TAB SWITCH ────────────────────────────────────
+  function switchTab(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── INIT ──────────────────────────────────────────
+  renderPetiscos();
+  renderComida();
+  renderBebidas();
+</script>
+</body>
+</html>
